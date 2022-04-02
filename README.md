@@ -1,5 +1,9 @@
 # minitalk
-
+## Resources
+  - https://code-vault.net/course/07hdekibo8:1603733520293/lesson/ouu2371akx:1603732432838 Explanation on communicating with processes.
+  - https://linuxhint.com/c-sigaction-function-usage/ 
+  - https://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html
+  - https://people.kth.se/~johanmon/ose/assignments/signals.pdf
 ## Functions allowed.
 
 ### signal
@@ -10,6 +14,7 @@
       - Positive value: Returned to parent or caller. The value contains process ID of newly created child process.
     - wait system call : wait(), A call to wait() blocks the calling process until one of its child processes exits or a signal is received. After child process terminates, parent continues its execution after wait system call instruction. For more details : https://www.geeksforgeeks.org/wait-system-call-c/
  - A signal is a software generated interrupt that is sent to a process by the OS because of when user press ctrl-c or another process tell something to this process. There are fix set of signals that can be sent to a process. signal are identified by integers. Signal number have symbolic names. For example: 
+ - The signal() function does not block other signals when the current handler’s execution is under process. At the same time, the sigaction function can block other signals until the current handler has returned.
 ```
   #define SIGHUP  1   /* Hangup the process */ 
   #define SIGINT  2   /* Interrupt the process */ 
