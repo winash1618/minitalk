@@ -1,0 +1,31 @@
+# resources
+  - https://stackoverflow.com/questions/6768426/in-a-signal-handler-how-to-know-where-the-program-is-interrupted
+  - http://www.cs.kent.edu/~ruttan/sysprog/lectures/signals.html
+  - https://www.gnu.org/software/libc/manual/html_node/Processes.html Read it inorder to get understanding of processes
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L01/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L02/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L03/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L04/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L05/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L06/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L07/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L08/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L09/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L10/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L11/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L12/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L13/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L14/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L15/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L16/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L20/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L21/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L22/Class.html
+  - https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L23/Class.html
+  - http://catb.org/esr/writings/taoup/html/ch02s01.html 
+  - https://people.cs.rutgers.edu/~pxk/416/notes/c-tutorials/
+  - https://programmerah.com/10-signals-14273/
+
+# Signals
+  - Signals are primarily used by the operating system to signal to processes that something has happened that probably needs some attention. 
+  - It could also be used in between processes or even inside a process to raise an exception.
