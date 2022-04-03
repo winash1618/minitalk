@@ -102,6 +102,19 @@
   ```
     sighandler_t signal(int signum, sighandler_t handler);
   ```
+  - The first argument, signum, identifies the signal whose behavior you want to control, and should be a signal number. The proper way to specify a signal number is with one of the symbolic signal names (see Standard Signals)—don’t use an explicit number, because the numerical code for a given kind of signal may vary from operating system to operating system.
+  - The second argument, action, specifies the action to use for the signal signum. This can be one of the following:
+    - SIG_DFL : SIG_DFL specifies the default action for the particular signal. The default actions for various kinds of signals are stated in Standard Signals.
+    - SIG_IGN : SIG_IGN specifies that the signal should be ignored.Your program generally should not ignore signals that represent serious events or that are normally used to request termination. You cannot ignore the SIGKILL or SIGSTOP signals at all. You can ignore program error signals like SIGSEGV, but ignoring the error won’t enable the program to continue executing meaningfully. Ignoring user requests such as SIGINT, SIGQUIT, and SIGTSTP is unfriendly.When you do not wish signals to be delivered during a certain part of the program, the thing to do is to block them, not ignore them. See Blocking Signals.
+
+    - handler : Supply the address of a handler function in your program, to specify running this handler as the way to deliver the signal.
+  
+  - sighandler_t (data_type) : This is the type of signal handler functions. Signal handlers take one integer argument specifying the signal number, and have return type void. So, you should define handler functions like this:
+  ```
+    void handler (int signum) { … }
+  ```
+  - The name sighandler_t for this data type is a GNU extension
+  - For more details on sighandler_t : https://www.gnu.org/software/libc/manual/html_node/Basic-Signal-Handling.html
   - Let’s look at how signal is implemented:
   ```
     #include <stdio.h>     /* standard I/O functions                         */
@@ -176,7 +189,7 @@
 ## Pending Signals
   - There is a brief period of time between the time a signal is generated and the time a signal is delivered (i.e. the action for the signal is taken). If another signal in generated during this time problems can arise. For instance you might wish to reset the signal handler but before the signal handler is reset another signal could arrive.
 
-## sigset_t : a datatype
+## sigset_t : a datatype 
   - There are two ways to initialize a signal set. You can initially specify it to be empty with sigemptyset and then add specified signals individually. Or you can specify it to be full with sigfillset and then delete specified signals individually.
   - You must always initialize the signal set with one of these two functions before using it in any other way. Don’t try to set all the signals explicitly because the sigset_t object might include some other information (like a version field) that needs to be initialized as well. (In addition, it’s not wise to put into your program an assumption that the system has no signals aside from the ones you know about.)
   - initializing with sigemptyset()
@@ -195,5 +208,7 @@
         int sigfillset (sigset_t *set)
       ```
   - sigaddset and sigdelset adds and deletes signal from the signal set.
+  - For more details on sigset_t : https://www.gnu.org/software/libc/manual/html_node/SignalSets.html#:~:text=The%20sigset_t%20data%20type%20is,try%20to%20manipulate%20them%20directly.
+
 
     
