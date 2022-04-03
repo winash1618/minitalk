@@ -1,4 +1,26 @@
 # minitalk
+## tips
+  - type SIGUSR1 in vscode and right click goto definition you can see all the signals that is defined and integer value of each signal.
+```
+#define SIGHUP  1       /* hangup */
+#define SIGINT  2       /* interrupt */
+#define SIGQUIT 3       /* quit */
+#define SIGILL  4       /* illegal instruction (not reset when caught) */
+#define SIGABRT 6       /* abort() */
+#define SIGFPE  8       /* floating point exception */
+#define SIGKILL 9       /* kill (cannot be caught or ignored) */
+#define SIGSEGV 11      /* segmentation violation */
+#define SIGSYS  12      /* bad argument to system call */
+#define SIGPIPE 13      /* write on a pipe with no one to read it */
+#define SIGALRM 14      /* alarm clock */
+#define SIGTERM 15      /* software termination signal from kill */
+#define SIGXCPU 24      /* exceeded CPU time limit */
+#define SIGXFSZ 25      /* exceeded file size limit */
+#define SIGVTALRM 26    /* virtual time alarm */
+#define SIGINFO 29      /* information request */
+#define SIGUSR1 30      /* user defined signal 1 */
+#define SIGUSR2 31      /* user defined signal 2 */
+```
 ## Resources
   - https://code-vault.net/course/07hdekibo8:1603733520293/lesson/ouu2371akx:1603732432838 Explanation on communicating with processes.
   - https://linuxhint.com/c-sigaction-function-usage/ 
@@ -84,6 +106,19 @@ struct sigaction {
 #include <signal.h>
 int sigemptyset(sigset_t *set);
 ```
-  
+```
+typedef struct __siginfo {
+	int     si_signo;               /* signal number */
+	int     si_errno;               /* errno association */
+	int     si_code;                /* signal code */
+	pid_t   si_pid;                 /* sending process */
+	uid_t   si_uid;                 /* sender's ruid */
+	int     si_status;              /* exit value */
+	void    *si_addr;               /* faulting instruction */
+	union sigval si_value;          /* signal value */
+	long    si_band;                /* band event for SIGPOLL */
+	unsigned long   __pad[7];       /* Reserved for Future Use */
+} siginfo_t;
+```
     
 
