@@ -78,7 +78,7 @@
       pid_t my_pid = getpid();
 
       /* now that i got my PID, send myself the STOP signal. */
-      kill(my_pid, SIGSTOP);
+      kill(my_pid, SIGSTOP); //return value is int
     ```
   - An example of a situation when this code might prove useful, is inside a signal handler that catches the TSTP signal (Ctrl-Z, remember?) in order to do various tasks before actually suspending the process. We will see an example of this later on.
 
@@ -142,34 +142,58 @@
        int     sa_flags;               /* see signal options below */
     };
     ```
+  - Data Type: sigset_t (used to represent a signal set. Internally, it may be implemented as either an integer or structure type.) 
   - The “mask” is a sigset_t, which is a set of signal numbers. The mask for signal sig expresses which signals the process can receive while it is handling signal number sig.
   - Let’s look at how sigaction is implemented:
-  ```
-  #include <stdio.h>
-  #include <signal.h>
-  #include <unistd.h>
-  int volatile count ;
-  void handler(int sig) 
-  {
-    printf("signal %d ouch that hurt\n",sig);
-    count++;
-  }
-  int main ( ) 
-  {
-    struct sigaction sa ;
-    int pid = getpid() ;
-    printf("ok,let's go,kill me(%d) if you can!\n",pid);
-    sa.sa_handler=handler;
-    sa.sa_flags=0;
-    sigemptyset(&sa.sa_mask);
-    if(sigaction(SIGINT,&sa,NULL)!=0){
-    return(1);
-  }
-    while(count!=4)
-    {
-    }
-    printf("I'vehadenough!\n");
-    return(0);
-  }
-  ```
-  
+    ```
+      #include <stdio.h>
+      #include <signal.h>
+      #include <unistd.h>
+      int volatile count ;
+      void handler(int sig) 
+      {
+        printf("signal %d ouch that hurt\n",sig);
+        count++;
+      }
+      int main ( ) 
+      {
+        struct sigaction sa ;
+        int pid = getpid() ;
+        printf("ok,let's go,kill me(%d) if you can!\n",pid);
+        sa.sa_handler=handler;
+        sa.sa_flags=0;
+        sigemptyset(&sa.sa_mask);
+        if(sigaction(SIGINT,&sa,NULL)!=0){
+        return(1);
+      }
+        while(count!=4)
+        {
+        }
+        printf("I'vehadenough!\n");
+        return(0);
+      }
+    ```
+## Pending Signals
+  - There is a brief period of time between the time a signal is generated and the time a signal is delivered (i.e. the action for the signal is taken). If another signal in generated during this time problems can arise. For instance you might wish to reset the signal handler but before the signal handler is reset another signal could arrive.
+
+## sigset_t : a datatype
+  - There are two ways to initialize a signal set. You can initially specify it to be empty with sigemptyset and then add specified signals individually. Or you can specify it to be full with sigfillset and then delete specified signals individually.
+  - You must always initialize the signal set with one of these two functions before using it in any other way. Don’t try to set all the signals explicitly because the sigset_t object might include some other information (like a version field) that needs to be initialized as well. (In addition, it’s not wise to put into your program an assumption that the system has no signals aside from the ones you know about.)
+  - initializing with sigemptyset()
+    - Function: This function initializes the signal set set to exclude all of the defined signals. It always returns 0.
+      ```
+        int sigemptyset (sigset_t *set)
+      ```
+    - for example:
+      ```
+        struct sigaction sa;
+        sigemptyset(&sa.sa_mask);
+      ```
+  - initializing with sigfillset()
+    - Function : This function initializes the signal set set to include all of the defined signals. Again, the return value is 0.
+      ```
+        int sigfillset (sigset_t *set)
+      ```
+  - sigaddset and sigdelset adds and deletes signal from the signal set.
+
+    
