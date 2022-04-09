@@ -1,8 +1,11 @@
 # minitalk
 ## doubts and clarification
-  - Why does printf() not print anything before sleep()? https://stackoverflow.com/questions/338273/why-does-printf-not-print-anything-before-sleep
-  - 
-
+ - Why does printf() not print anything before sleep()? https://stackoverflow.com/questions/338273/why-does-printf-not-print-anything-before-sleep
+ - Another doubt i had was if we are calling the same function for both signals how do i know which one is sigusr1 or sigusr2. The doubt was cleared when i found out that signal handler function takes one input parameter as type int which is used to pass value of either sigusr1 or sigusr2. The function prototype is given below.
+ ```
+ 	 void(*signal(int, void (*)(int)))(int);
+ ```
+ -  
 ## tips
   - type SIGUSR1 in vscode and right click goto definition you can see all the signals that is defined and integer value of each signal.
 ```
