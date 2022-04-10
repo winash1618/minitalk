@@ -7,25 +7,23 @@
 #include "libft/libft.h"
 #include "libft/ft_printf/ft_printf.h"
 
-void handler(int sig_val)
+void	handler(int sig_val)
 {
 	static int i;
 	static char c;
 
-
 	if (sig_val == SIGUSR1)
 	{
-		c = (c << 1) | 0;
-		ft_printf(" %d", c);
+		c = (c << 1) | 1;
 	}
 	else if (sig_val == SIGUSR2)
 	{
-		c = (c << 1) | 1;
-		ft_printf(" %d", c);
+		c = (c << 1) | 0;
 	}
 	i++;
 	if(i == 8)
 	{
+		ft_printf("%c", c);
 		i = 0;
 		c = 0;
 	}

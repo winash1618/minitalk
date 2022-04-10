@@ -27,7 +27,13 @@ int	main(int ac, char **av)
 {
 	ac = 4;
 	int a;
+	int i;
 
+	i = 0;
 	a = ft_atoi(av[1]);
-	send_data('A', a);
+	while (av[2][i])
+	{
+		send_data(av[2][i], a);
+		i++;
+	}
 }

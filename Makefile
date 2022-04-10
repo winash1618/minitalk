@@ -24,6 +24,7 @@ FLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 
+
 all: 
 	@echo "$(WHT)Compiling libft...$(EOC)"
 	@make -C $(LIBFT_DIR)
@@ -45,3 +46,6 @@ fclean:
 	@make -C $(LIBFT_DIR) fclean
 	@make -C $(FT_PRINTF_DIR) fclean
 	@make -C ./ clean
+re:
+	@make fclean
+	@make all
