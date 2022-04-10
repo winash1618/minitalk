@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkaruvan <mkaruvan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
+/*   Updated: 2022/04/10 10:52:44 by mkaruvan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <sys/types.h>
 #include <signal.h>
 #include "libft/libft.h"
@@ -7,7 +19,9 @@ int	g_count;
 
 void	handler(int sig_val)
 {
-	ft_printf("Thank you, recieved %d characters", g_count);
+	if (sig_val == SIGUSR1)
+		ft_printf("Thank you, recieved %d characters", g_count);
+	exit (1);
 }
 
 void	send_data(char c, int pid)
@@ -39,7 +53,11 @@ int	main(int ac, char **av)
 			send_data(av[2][i], a);
 			i++;
 		}
+		send_data('\0', a);
 		g_count = ft_strlen(av[2]);
 		signal(SIGUSR1, handler);
+		while (1)
+		{
+		}
 	}
 }

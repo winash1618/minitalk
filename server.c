@@ -1,87 +1,27 @@
-#include <stdio.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkaruvan <mkaruvan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
+/*   Updated: 2022/04/10 10:50:40 by mkaruvan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <sys/types.h>
 #include <signal.h>
-#include <stdlib.h>
-#include <string.h>
 #include "libft/libft.h"
 #include "libft/ft_printf/ft_printf.h"
 
-// void	handler(int sig_val)
-// {
-// 	static int i;
-// 	static char c;
-
-// 	if (sig_val == SIGUSR1)
-// 	{
-// 		c = (c << 1) | 1;
-// 	}
-// 	else if (sig_val == SIGUSR2)
-// 	{
-// 		c = (c << 1) | 0;
-// 	}
-// 	i++;
-// 	if(i == 8)
-// 	{
-// 		ft_printf("%c", c);
-// 		i = 0;
-// 		c = 0;
-// 	}
-
-// }
-
-// int main()
-// {
-// 	pid_t my_pid;
-// 	my_pid = getpid();
-// 	// printf("%d", my_pid);
-//  	// fflush(stdout);
-// 	ft_printf("pid : %d\n", my_pid);
-// 	// we need to use ft_printf since 
-// 	// printf won't work without fflush and also 
-// 	// printf is not allowed.
-// 	signal(SIGUSR1, handler);
-// 	signal(SIGUSR2, handler);
-// 	while(1)
-// 	{
-
-// 	}
-// }
-
-// void send_data(char *str, int pid)
-// {
-// 	char c;
-
-// 	while (*str)
-// 	{
-// 		c = *str++;
-// 	int i;
-
-// 	i = 8;
-// 	while (--i >= 0)
-// 	{
-// 		if ((c >> i & 1) == 1)
-// 			kill(pid, SIGUSR1);
-// 		else
-// 			kill(pid, SIGUSR2);
-// 		usleep(150);
-// 	}
-// 	}
-// }
-int counter;
-void killer(siginfo_t *siginfo)
+void	killer(siginfo_t *siginfo)
 {
-	int i;
-
-	i = 0;
-	while (i < counter)
-	{
-		i++;
-		
-		kill(siginfo->si_pid, SIGUSR1);
-	}
+	usleep(300);
+	kill(siginfo->si_pid, SIGUSR1);
 }
-void handler(int sig, siginfo_t *siginfo, void *context)
+
+void	handler(int sig, siginfo_t *siginfo, void *context)
 {
 	static int	i;
 	static char	c;
@@ -97,32 +37,25 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 		c = (c << 1) | 0;
 	}
 	i++;
-	if(i == 8)
+	if (i == 8)
 	{
-		
 		ft_printf("%c", c);
-		if(c == '\0')
-		{
+		if (c == '\0')
 			killer(siginfo);
-		}
 		i = 0;
 		c = 0;
-		counter++;
-		
 	}
-	 //printf("your PID is %d\n", siginfo->si_pid);
+	siginfo->si_pid++;
 }
 
-
-int main()
+int	main(void)
 {
-	int pid;
-	struct sigaction sa1;
-	struct sigaction sa2;
+	int					pid;
+	struct sigaction	sa1;
+	struct sigaction	sa2;
 
-	counter = 0;
 	pid = getpid();
-	ft_printf("Ok,let's go - Here's my pid (%d). \n",pid);
+	ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
 	sa1.sa_flags = SA_SIGINFO;
 	sa1.sa_sigaction = handler;
 	sigemptyset(&sa1.sa_mask);
@@ -131,8 +64,8 @@ int main()
 	sigemptyset(&sa2.sa_mask);
 	sigaction(SIGUSR1, &sa1, NULL);
 	sigaction(SIGUSR2, &sa2, NULL);
-	while(1)
+	while (1)
 	{
 	}
-	return(0);
+	return (0);
 }
