@@ -16,7 +16,7 @@ YEL = \033[1;33m
 WHT = \033[1;37m
 EOC = \033[1;0m
 
-OBJ = *.o
+OBJ = server client
 
 CC = gcc
 
@@ -39,7 +39,7 @@ clean:
 	@echo "$(WHT)removing object files...$(EOC)"
 	@make -C $(LIBFT_DIR) clean
 	@make -C $(FT_PRINTF_DIR) clean
-	@$(RM) $(OBJ)
+	@$(RM) server client
 fclean:
 	@echo "$(WHT)removing build files...$(EOC)"
 	@make -C $(LIBFT_DIR) fclean
