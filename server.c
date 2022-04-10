@@ -48,32 +48,43 @@
 // 	}
 // }
 
-void send_data(char *str, int pid)
-{
-	char c;
+// void send_data(char *str, int pid)
+// {
+// 	char c;
 
-	while (*str)
-	{
-		c = *str++;
+// 	while (*str)
+// 	{
+// 		c = *str++;
+// 	int i;
+
+// 	i = 8;
+// 	while (--i >= 0)
+// 	{
+// 		if ((c >> i & 1) == 1)
+// 			kill(pid, SIGUSR1);
+// 		else
+// 			kill(pid, SIGUSR2);
+// 		usleep(150);
+// 	}
+// 	}
+// }
+int counter;
+void killer(siginfo_t *siginfo)
+{
 	int i;
 
-	i = 8;
-	while (--i >= 0)
+	i = 0;
+	while (i < counter)
 	{
-		if ((c >> i & 1) == 1)
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		usleep(150);
-	}
+		i++;
+		
+		kill(siginfo->si_pid, SIGUSR1);
 	}
 }
-
 void handler(int sig, siginfo_t *siginfo, void *context)
 {
 	static int	i;
 	static char	c;
-	static int	counter;
 	char		*str;
 
 	str = (void *)context;
@@ -90,17 +101,16 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 	{
 		
 		ft_printf("%c", c);
+		if(c == '\0')
+		{
+			killer(siginfo);
+		}
 		i = 0;
 		c = 0;
 		counter++;
-		if(c == '\0')
-		{
-			usleep(150);
-			send_data("Thank you for sending", siginfo->si_pid);
-			send_data(ft_itoa(counter), siginfo->si_pid);
-		}
+		
 	}
-	printf("your PID is %d\n", siginfo->si_pid);
+	 //printf("your PID is %d\n", siginfo->si_pid);
 }
 
 
@@ -110,6 +120,7 @@ int main()
 	struct sigaction sa1;
 	struct sigaction sa2;
 
+	counter = 0;
 	pid = getpid();
 	ft_printf("Ok,let's go - Here's my pid (%d). \n",pid);
 	sa1.sa_flags = SA_SIGINFO;
