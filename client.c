@@ -7,6 +7,28 @@
 #include "libft/ft_printf/ft_printf.h"
 #include <stdio.h>    
 
+void	handler(int sig_val)
+{
+	static int i;
+	static char c;
+
+	if (sig_val == SIGUSR1)
+	{
+		c = (c << 1) | 1;
+	}
+	else if (sig_val == SIGUSR2)
+	{
+		c = (c << 1) | 0;
+	}
+	i++;
+	if(i == 8)
+	{
+		ft_printf("%c", c);
+		i = 0;
+		c = 0;
+	}
+}
+
 void send_data(char c, int pid)
 {
 	int i;
@@ -35,5 +57,11 @@ int	main(int ac, char **av)
 	{
 		send_data(av[2][i], a);
 		i++;
+	}
+	signal(SIGUSR1, handler);
+	signal(SIGUSR2, handler);
+	while (1)
+	{
+
 	}
 }
