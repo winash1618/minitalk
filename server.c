@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2022/04/10 10:50:40 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2022/04/11 10:47:54 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	main(void)
 	sigaction(SIGUSR1, &sa1, NULL);
 	sigaction(SIGUSR2, &sa2, NULL);
 	while (1)
-	{
-	}
+		pause();
 	return (0);
 }
