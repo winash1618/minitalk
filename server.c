@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2022/04/11 10:47:54 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2022/04/12 14:38:43 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,8 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 {
 	static int	i;
 	static char	c;
-	char		*str;
 
-	str = (void *)context;
+	(void)context;
 	if (sig == SIGUSR1)
 	{
 		c = (c << 1) | 1;
@@ -48,23 +47,30 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 	siginfo->si_pid++;
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
 	int					pid;
+	static int			first;
 	struct sigaction	sa1;
 	struct sigaction	sa2;
 
-	pid = getpid();
-	ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
-	sa1.sa_flags = SA_SIGINFO;
-	sa1.sa_sigaction = handler;
-	sigemptyset(&sa1.sa_mask);
-	sa2.sa_flags = SA_SIGINFO;
-	sa2.sa_sigaction = handler;
-	sigemptyset(&sa2.sa_mask);
-	sigaction(SIGUSR1, &sa1, NULL);
-	sigaction(SIGUSR2, &sa2, NULL);
-	while (1)
-		pause();
+	(void)av;
+	if (ac == 1)
+	{
+		pid = getpid();
+		ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
+		sa1.sa_flags = SA_SIGINFO;
+		sa1.sa_sigaction = handler;
+		sigemptyset(&sa1.sa_mask);
+		sa2.sa_flags = SA_SIGINFO;
+		sa2.sa_sigaction = handler;
+		sigemptyset(&sa2.sa_mask);
+		sigaction(SIGUSR1, &sa1, NULL);
+		sigaction(SIGUSR2, &sa2, NULL);
+		while (1)
+			pause();
+	}
+	else
+		ft_putendl_fd("Wrong Number of arguments", 2);
 	return (0);
 }

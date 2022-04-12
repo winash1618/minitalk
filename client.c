@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2022/04/11 10:48:16 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2022/04/12 14:41:30 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,13 @@
 
 int	g_count;
 
-void	ft_error(int flag, char **av)
+void	ft_err(int pid, int flag)
 {
-	int	a;
-
-	a = ft_atoi(av[1]);
-	if (flag == 1 && a < 100 && a > 99999)
+	if (pid < 100 && pid > 99999 || flag == -1)
 	{
-		ft_printf("Enter Correct pid");
+		ft_printf("Enter correct pid");
+		exit (1);
 	}
-	else if (flag == 0)
-	{
-		ft_printf("You need enter 3 arguements in a format as given below \n");
-		ft_printf("./client PID_SERVER STRING_TO_PASS");
-	}
-	exit(1);
 }
 
 void	handler(int sig_val)
@@ -44,16 +36,19 @@ void	handler(int sig_val)
 void	send_data(char c, int pid)
 {
 	int	i;
+	int	j;
 
 	i = 8;
+	j = 0;
 	while (--i >= 0)
 	{
 		if ((c >> i & 1) == 1)
-			kill(pid, SIGUSR1);
+			j = kill(pid, SIGUSR1);
 		else
-			kill(pid, SIGUSR2);
+			j = kill(pid, SIGUSR2);
 		usleep(150);
 	}
+	ft_err(pid, j);
 }
 
 int	main(int ac, char **av)
@@ -65,7 +60,7 @@ int	main(int ac, char **av)
 	if (ac == 3)
 	{
 		a = ft_atoi(av[1]);
-		ft_error(1, av);
+		ft_err(a, 0);
 		while (av[2][i])
 		{
 			send_data(av[2][i], a);
@@ -78,5 +73,5 @@ int	main(int ac, char **av)
 			pause();
 	}
 	else
-		ft_error(0, av);
+		ft_putendl_fd("Wrong Number of arguments", 2);
 }
