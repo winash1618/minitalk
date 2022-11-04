@@ -10,8 +10,8 @@ int main()
 	return 0;
 }
 /* The number of times ‘hello’ is printed is equal to number of process created.
- Total Number of Processes = 2n, where n is number of fork system calls.
-  So here n = 3, 23 = 8 
+ Total Number of Processes = 2^n, where n is number of fork system calls.
+  So here n = 3, 2^3 = 8 
 fork ();   // Line 1
 fork ();   // Line 2
 fork ();   // Line 3
