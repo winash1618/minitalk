@@ -28,13 +28,9 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 
 	(void)context;
 	if (sig == SIGUSR1)
-	{
 		c = (c << 1) | 1;
-	}
 	else if (sig == SIGUSR2)
-	{
 		c = (c << 1) | 0;
-	}
 	i++;
 	if (i == 8)
 	{
@@ -50,7 +46,6 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 int	main(int ac, char **av)
 {
 	int					pid;
-	static int			first;
 	struct sigaction	sa1;
 	struct sigaction	sa2;
 

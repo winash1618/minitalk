@@ -19,7 +19,7 @@ int	g_count;
 
 void	ft_err(int pid, int flag)
 {
-	if (pid < 100 && pid > 99999 || flag == -1)
+	if (flag == -1)
 	{
 		ft_printf("Enter correct pid");
 		exit (1);
@@ -62,10 +62,7 @@ int	main(int ac, char **av)
 		a = ft_atoi(av[1]);
 		ft_err(a, 0);
 		while (av[2][i])
-		{
-			send_data(av[2][i], a);
-			i++;
-		}
+			send_data(av[2][i++], a);
 		send_data('\0', a);
 		g_count = ft_strlen(av[2]);
 		signal(SIGUSR1, handler);

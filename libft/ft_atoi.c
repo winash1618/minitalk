@@ -37,5 +37,7 @@ int	ft_atoi(const char *str)
 		return (0);
 	else if (sum > 2147483647 && count == 1)
 		return (-1);
+	if (*str)
+		exit(1);
 	return (sum * count);
 }

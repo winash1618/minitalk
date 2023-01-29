@@ -36,7 +36,7 @@ EOC = \033[1;0m
 
 CC = gcc
 
-FLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
 
