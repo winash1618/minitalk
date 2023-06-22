@@ -6,16 +6,17 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/22 08:34:24 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:38:54 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/types.h>
 #include <signal.h>
+#include <stdbool.h>
 #include "libft/libft.h"
 #include "libft/ft_printf/ft_printf.h"
 
-int	g_flag = 0;
+bool	g_flag = false;
 
 void	ft_err(int pid)
 {
@@ -34,7 +35,8 @@ void	handler(int sig)
 	if (sig == SIGUSR1)
 	{
 		recd_bit++;
-		g_flag = 0;
+		usleep(20);
+		g_flag = false;
 		if (recd_bit == 8)
 		{
 			recd_char++;
@@ -43,12 +45,12 @@ void	handler(int sig)
 	}
 	else
 	{
-		ft_printf("Thank you, recieved %d characters", recd_char - 1);
-		exit (1);
+		ft_printf("Number of Character's recd = %d\n", recd_char - 1);
+		exit (0);
 	}
 }
 
-void	send_data(char character, int pid)
+void	send_data(unsigned char character, int pid)
 {
 	int	index;
 
@@ -59,7 +61,7 @@ void	send_data(char character, int pid)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		g_flag = 1;
+		g_flag = true;
 		while (g_flag)
 			usleep(10);
 	}
@@ -77,6 +79,7 @@ int	main(int ac, char **av)
 		ft_err(pid);
 		signal(SIGUSR1, &handler);
 		signal(SIGUSR2, &handler);
+		ft_printf("Number of character's send = %d\n", ft_strlen(av[2]));
 		while (av[2][i])
 			send_data(av[2][i++], pid);
 		send_data('\0', pid);

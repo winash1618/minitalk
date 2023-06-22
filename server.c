@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/22 07:52:51 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/22 10:27:35 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <signal.h>
 #include "libft/libft.h"
 #include "libft/ft_printf/ft_printf.h"
+
+pid_t client_pid;
 
 void	killer(pid_t client_pid)
 {
@@ -25,12 +27,13 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 {
 	static int	i;
 	static unsigned char	character;
-	pid_t client_pid;
 
 	(void)context;
-	client_pid = siginfo->si_pid;
+	if (siginfo->si_pid)
+		client_pid = siginfo->si_pid;
 	character = (character << 1) | (sig == SIGUSR1);
 	i++;
+	usleep(50);
 	kill(client_pid, SIGUSR1);
 	if (i == 8)
 	{
@@ -38,6 +41,7 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 		if (character == '\0')
 			killer(client_pid);
 		write(1, &character, 1);
+		character = '\0';
 	}
 }
 
