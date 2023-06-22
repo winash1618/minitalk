@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkaruvan <mkaruvan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2022/04/12 14:38:43 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/22 07:52:51 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,53 +15,46 @@
 #include "libft/libft.h"
 #include "libft/ft_printf/ft_printf.h"
 
-void	killer(siginfo_t *siginfo)
+void	killer(pid_t client_pid)
 {
-	usleep(300);
-	kill(siginfo->si_pid, SIGUSR1);
+	usleep(50);
+	kill(client_pid, SIGUSR2);
 }
 
 void	handler(int sig, siginfo_t *siginfo, void *context)
 {
 	static int	i;
-	static char	c;
+	static unsigned char	character;
+	pid_t client_pid;
 
 	(void)context;
-	if (sig == SIGUSR1)
-		c = (c << 1) | 1;
-	else if (sig == SIGUSR2)
-		c = (c << 1) | 0;
+	client_pid = siginfo->si_pid;
+	character = (character << 1) | (sig == SIGUSR1);
 	i++;
+	kill(client_pid, SIGUSR1);
 	if (i == 8)
 	{
-		ft_printf("%c", c);
-		if (c == '\0')
-			killer(siginfo);
 		i = 0;
-		c = 0;
+		if (character == '\0')
+			killer(client_pid);
+		write(1, &character, 1);
 	}
-	siginfo->si_pid++;
 }
 
 int	main(int ac, char **av)
 {
 	int					pid;
-	struct sigaction	sa1;
-	struct sigaction	sa2;
+	struct sigaction	sa;
 
 	(void)av;
 	if (ac == 1)
 	{
 		pid = getpid();
 		ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
-		sa1.sa_flags = SA_SIGINFO;
-		sa1.sa_sigaction = handler;
-		sigemptyset(&sa1.sa_mask);
-		sa2.sa_flags = SA_SIGINFO;
-		sa2.sa_sigaction = handler;
-		sigemptyset(&sa2.sa_mask);
-		sigaction(SIGUSR1, &sa1, NULL);
-		sigaction(SIGUSR2, &sa2, NULL);
+		sa.sa_sigaction = handler;
+		sa.sa_flags = SA_SIGINFO;
+		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
 		while (1)
 			pause();
 	}

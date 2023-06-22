@@ -1,11 +1,4 @@
 # minitalk
-## doubts and clarification
- - Why does printf() not print anything before sleep()? https://stackoverflow.com/questions/338273/why-does-printf-not-print-anything-before-sleep
- - Another doubt i had was if we are calling the same function for both signals how do i know which one is sigusr1 or sigusr2. The doubt was cleared when i found out that signal handler function takes one input parameter as type int which is used to pass value of either sigusr1 or sigusr2. The function prototype is given below.
- ```
- 	 void(*signal(int, void (*)(int)))(int);
- ```
- -  
 ## tips
   - type SIGUSR1 in vscode and right click goto definition you can see all the signals that is defined and integer value of each signal.
 ```
@@ -102,7 +95,7 @@
 	```
   - For more details : https://www.geeksforgeeks.org/signals-c-language/    https://jameshfisher.com/2017/01/13/c-sigaction/#:~:text=sigaction(sig%2C%20act%2C%20oact,the%20given%20signal%20is%20received
 
-##sigaction()
+## sigaction()
   - The “signal facility is a simplified interface to the more general sigaction facility.” Indeed, when we trace a C program with signal calls, we only see calls to sigaction system calls. We’re also told that “signal is less portable than sigaction when establishing a signal handler”.
   - Let’s look into sigaction. It’s a system call. It has a more complicated interface than signal:
 	```
@@ -119,7 +112,7 @@
 	};
 	```
 - The “mask” is a sigset_t, which is a set of signal numbers. The mask for signal sig expresses which signals the process can receive while it is handling signal number sig.
-##sigemptyset()
+## sigemptyset()
   - Initializes a signal set set to the empty set. All recognized signals are excluded. 
   - sigemptyset() is part of a family of functions that manipulate signal sets. Signal sets are data objects that let a process keep track of groups of signals. For example, a process can create one signal set to record which signals it is blocking, and another signal set to record which signals are pending. 
   - Signal sets are used to manipulate groups of signals used by other functions (such as sigprocmask()) or to examine signal sets returned by other functions (such as sigpending()).
