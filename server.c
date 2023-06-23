@@ -6,31 +6,75 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/22 10:27:35 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/23 09:27:29 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/types.h>
 #include <signal.h>
-#include "libft/libft.h"
-#include "libft/ft_printf/ft_printf.h"
+#include "libft/includes/libft.h"
+#include "libft/includes/ft_printf.h"
 
-pid_t client_pid;
+t_dlist *char_store;
 
-void	killer(pid_t client_pid)
+void killer(pid_t client_pid)
 {
 	usleep(50);
+	if (ft_dlstfind(char_store, client_pid))
+		ft_dlstdelone(&char_store, client_pid);
 	kill(client_pid, SIGUSR2);
 }
 
-void	handler(int sig, siginfo_t *siginfo, void *context)
+void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t *client_pid)
 {
-	static int	i;
-	static unsigned char	character;
+	t_dlist *temp;
+
+	temp = char_store;
+	if (*client_pid != pid)
+	{
+		if (!ft_dlstfind(char_store, pid))
+		{
+			ft_dlstadd_back(&char_store, ft_dlstnew(pid));
+			*client_pid = pid;
+		}
+		else
+		{
+			while (temp)
+			{
+				if (temp->pid == pid)
+				{
+					printf("hi i am here %d %d\n", *client_pid, temp->pid);
+					*character = temp->character;
+					*index = temp->index;
+					*client_pid = temp->pid;
+				}
+				temp = temp->next;
+			}
+		}
+	}
+	else
+	{
+		while (temp)
+		{
+			if (temp->pid == pid)
+			{
+				temp->character = *character;
+				temp->index = *index;
+			}
+			temp = temp->next;
+		}
+	}
+}
+
+void handler(int sig, siginfo_t *siginfo, void *context)
+{
+	static int i;
+	static unsigned char character;
+	static pid_t client_pid;
 
 	(void)context;
 	if (siginfo->si_pid)
-		client_pid = siginfo->si_pid;
+		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
 	character = (character << 1) | (sig == SIGUSR1);
 	i++;
 	usleep(50);
@@ -45,24 +89,18 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 	}
 }
 
-int	main(int ac, char **av)
+int main()
 {
-	int					pid;
-	struct sigaction	sa;
+	int pid;
+	struct sigaction sa;
 
-	(void)av;
-	if (ac == 1)
-	{
-		pid = getpid();
-		ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
-		sa.sa_sigaction = handler;
-		sa.sa_flags = SA_SIGINFO;
-		sigaction(SIGUSR1, &sa, NULL);
-		sigaction(SIGUSR2, &sa, NULL);
-		while (1)
-			pause();
-	}
-	else
-		ft_putendl_fd("Wrong Number of arguments", 2);
+	pid = getpid();
+	ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
+	sa.sa_sigaction = handler;
+	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
+	while (1)
+		pause();
 	return (0);
 }

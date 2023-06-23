@@ -6,15 +6,15 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/22 10:38:54 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/23 07:09:20 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/types.h>
 #include <signal.h>
 #include <stdbool.h>
-#include "libft/libft.h"
-#include "libft/ft_printf/ft_printf.h"
+#include "libft/includes/libft.h"
+#include "libft/includes/ft_printf.h"
 
 bool	g_flag = false;
 
