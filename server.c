@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/23 09:27:29 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/23 10:24:00 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ t_dlist *char_store;
 void killer(pid_t client_pid)
 {
 	usleep(50);
-	if (ft_dlstfind(char_store, client_pid))
-		ft_dlstdelone(&char_store, client_pid);
+	// if (ft_dlstfind(char_store, client_pid))
+	// 	ft_dlstdelone(&char_store, client_pid); // this is not working fine
 	kill(client_pid, SIGUSR2);
 }
 
@@ -36,6 +36,8 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 		{
 			ft_dlstadd_back(&char_store, ft_dlstnew(pid));
 			*client_pid = pid;
+			*index = 0;
+			*character = '\0';
 		}
 		else
 		{
@@ -43,7 +45,6 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 			{
 				if (temp->pid == pid)
 				{
-					printf("hi i am here %d %d\n", *client_pid, temp->pid);
 					*character = temp->character;
 					*index = temp->index;
 					*client_pid = temp->pid;
@@ -77,6 +78,8 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
 	character = (character << 1) | (sig == SIGUSR1);
 	i++;
+	if (siginfo->si_pid)
+		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
 	usleep(50);
 	kill(client_pid, SIGUSR1);
 	if (i == 8)
