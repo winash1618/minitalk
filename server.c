@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/25 07:32:38 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/25 10:42:25 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,11 @@ void killer(pid_t client_pid)
 			char_store = node->next;
 			free(node);
 			node = NULL;
-			kill(client_pid, SIGUSR2);
+			if (kill(client_pid, SIGUSR2) == -1)
+			{
+				ft_printf("Client Pid is invalid\n");
+				exit(0);
+			}
 			return ;
 		}
 		if (node->next && node->next->pid == client_pid)
@@ -40,7 +44,11 @@ void killer(pid_t client_pid)
 			node->next = node->next->next;
 			free(temp);
 			temp = NULL;
-			kill(client_pid, SIGUSR2);
+			if (kill(client_pid, SIGUSR2) == -1)
+			{
+				ft_printf("Client Pid is invalid\n");
+				exit(0);
+			}
 			return ;
 		}
 		node = node->next;
@@ -56,7 +64,6 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 	{
 		if (!ft_dlstfind(char_store, pid))
 		{
-			ft_printf("If i am not coming here kill me\n");
 			ft_dlstadd_back(&char_store, ft_dlstnew(pid));
 			*client_pid = pid;
 			*index = 0;
@@ -69,7 +76,6 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 			{
 				if (temp->pid == pid)
 				{
-					// ft_printf("hi i am here \n");
 					*character = temp->character;
 					*index = temp->index;
 					*client_pid = temp->pid;
@@ -101,25 +107,23 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 	static pid_t client_pid;
 
 	(void)context;
-	// ft_printf("hid %d", siginfo->si_pid);
 	if (siginfo->si_pid)
 		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
 	character = (character << 1) | (sig == SIGUSR1);
 	i++;
 	if (siginfo->si_pid)
 		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
-	// ft_printf("siginfo->si_pid = %d \n", siginfo->si_pid);
 	usleep(50);
-	kill(client_pid, SIGUSR1);
+	if (kill(client_pid, SIGUSR1) == -1)
+	{
+		ft_printf("Client Pid is invalid\n");
+		exit(0);
+	}
 	if (i == 8)
 	{
 		i = 0;
 		if (character == '\0')
-		{
-			printf("size before : %d\n", ft_dlstsize(char_store));
 			killer(client_pid);
-			printf("size after : %d\n", ft_dlstsize(char_store));
-		}
 		write(1, &character, 1);
 		character = '\0';
 	}
@@ -134,8 +138,11 @@ int main()
 	ft_printf("Ok,let's go - Here's my pid (%d). \n", pid);
 	sa.sa_sigaction = handler;
 	sa.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_printf("Error registering SIGUSR signal handler.\n");
+		return 1;
+	}
 	while (1)
 		pause();
 	return (0);
