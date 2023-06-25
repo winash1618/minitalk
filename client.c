@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/25 11:03:28 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/25 14:27:14 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,27 @@ void	send_data(unsigned char character, int pid)
 	int	index;
 	// int time;
 
-	index = 8;
-	while (--index >= 0)
+	index = 7;
+	while (index >= 0)
 	{
 		// time = 0;
-		if (kill(pid, SIGUSR2 - (character >> index & 1)) == -1)
-			ft_err();
+		int k = 0;
+		while (1)
+		{
+			usleep(20);
+			int j = kill(pid, SIGUSR2 - (character >> index-- & 1));
+			if (j == -1)
+			{
+				k++;
+				if (k > 10)
+				{
+					ft_printf("Server PID is Invalid\n");
+					exit (0);
+				}
+			}
+			else if (j == 0)
+				break;
+		}
 		g_flag = true;
 		while (g_flag)
 		{

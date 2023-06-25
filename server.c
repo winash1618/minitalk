@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/25 10:42:25 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/25 14:15:09 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,25 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 	i++;
 	if (siginfo->si_pid)
 		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
-	usleep(50);
-	if (kill(client_pid, SIGUSR1) == -1)
+	int k = 0;
+	// ft_printf("\n");
+	while (1)
 	{
-		ft_printf("Client Pid is invalid\n");
-		exit(0);
+		usleep(20);
+		int j = kill(client_pid, SIGUSR1);
+		if (j == -1)
+		{
+			k++;
+			if (k > 10)
+			{
+				ft_printf("Client Pid is invalid\n");
+				exit(0);
+			}
+		} 
+		else if (j == 0)
+			break ;
 	}
+	// usleep(50);
 	if (i == 8)
 	{
 		i = 0;
