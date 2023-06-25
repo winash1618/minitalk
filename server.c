@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/23 10:24:00 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/25 07:32:38 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,32 @@ t_dlist *char_store;
 
 void killer(pid_t client_pid)
 {
+	t_dlist *node;
+	t_dlist *temp;
+
+	node = char_store;
 	usleep(50);
-	// if (ft_dlstfind(char_store, client_pid))
-	// 	ft_dlstdelone(&char_store, client_pid); // this is not working fine
-	kill(client_pid, SIGUSR2);
+	while (node)
+	{
+		if (node->pid == client_pid && char_store == node)
+		{
+			char_store = node->next;
+			free(node);
+			node = NULL;
+			kill(client_pid, SIGUSR2);
+			return ;
+		}
+		if (node->next && node->next->pid == client_pid)
+		{
+			temp = node->next;
+			node->next = node->next->next;
+			free(temp);
+			temp = NULL;
+			kill(client_pid, SIGUSR2);
+			return ;
+		}
+		node = node->next;
+	}
 }
 
 void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t *client_pid)
@@ -34,10 +56,12 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 	{
 		if (!ft_dlstfind(char_store, pid))
 		{
+			ft_printf("If i am not coming here kill me\n");
 			ft_dlstadd_back(&char_store, ft_dlstnew(pid));
 			*client_pid = pid;
 			*index = 0;
 			*character = '\0';
+			return ;
 		}
 		else
 		{
@@ -45,9 +69,11 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 			{
 				if (temp->pid == pid)
 				{
+					// ft_printf("hi i am here \n");
 					*character = temp->character;
 					*index = temp->index;
 					*client_pid = temp->pid;
+					return ;
 				}
 				temp = temp->next;
 			}
@@ -61,6 +87,7 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 			{
 				temp->character = *character;
 				temp->index = *index;
+				return ;
 			}
 			temp = temp->next;
 		}
@@ -74,19 +101,25 @@ void handler(int sig, siginfo_t *siginfo, void *context)
 	static pid_t client_pid;
 
 	(void)context;
+	// ft_printf("hid %d", siginfo->si_pid);
 	if (siginfo->si_pid)
 		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
 	character = (character << 1) | (sig == SIGUSR1);
 	i++;
 	if (siginfo->si_pid)
 		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
+	// ft_printf("siginfo->si_pid = %d \n", siginfo->si_pid);
 	usleep(50);
 	kill(client_pid, SIGUSR1);
 	if (i == 8)
 	{
 		i = 0;
 		if (character == '\0')
+		{
+			printf("size before : %d\n", ft_dlstsize(char_store));
 			killer(client_pid);
+			printf("size after : %d\n", ft_dlstsize(char_store));
+		}
 		write(1, &character, 1);
 		character = '\0';
 	}
