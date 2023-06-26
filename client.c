@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 13:22:28 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 16:45:56 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 void	send_data(unsigned char character, int pid)
 {
 	int	index;
+	int time;
 
 	index = 7;
+	time = 0;
 	usleep(2);
 	while (index >= 0)
 	{
@@ -87,7 +89,15 @@ void	send_data(unsigned char character, int pid)
 			ft_err();
 		g_flag = true;
 		while (g_flag)
+		{
 			usleep(20);
+			time++;
+			if (time > 100)
+			{
+				g_flag = false;
+				ft_printf("hi");
+			}
+		}
 	}
 }
 

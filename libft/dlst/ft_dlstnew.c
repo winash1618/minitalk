@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 08:44:47 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 08:44:51 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 16:32:38 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,6 @@ t_dlist	*ft_dlstnew(pid_t pid)
 	new->pid = pid;
 	new->character = '\0';
 	new->index = 0;
+	new->next = NULL;
 	return (new);
 }

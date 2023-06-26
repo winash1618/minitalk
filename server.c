@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 13:22:53 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 16:48:45 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,23 +60,26 @@ pid_t check_list_and_reset(pid_t pid, int *index, \
 			unsigned char *character, pid_t *client_pid)
 {
 	t_dlist	*temp;
+	// int i;
 
 	temp = g_store;
+	// i = 0;
 	while (temp && temp->pid != pid)
+	// {
+	// 	i++;
+	// 	if (i > 100)
+	// 		ft_printf("Error : \n");
 		temp = temp->next;
+	// }
 	if (*client_pid != pid)
 	{
 		if (!ft_dlstfind(g_store, pid))
 		{
-			ft_dlstadd_back(&g_store, ft_dlstnew(pid));
-			*index = 0;
-			*character = '\0';
+			temp = ft_dlstnew(pid);
+			ft_dlstadd_back(&g_store, temp);
 		}
-		else
-		{
-			*character = temp->character;
-			*index = temp->index;
-		}
+		*character = temp->character;
+		*index = temp->index;
 	}
 	else
 	{
