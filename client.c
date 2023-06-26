@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 08:40:18 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 13:22:28 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	send_data(unsigned char character, int pid)
 	int	index;
 
 	index = 7;
+	usleep(2);
 	while (index >= 0)
 	{
 		if (kill(pid, SIGUSR2 - (character >> index-- & 1)) == -1)
