@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 08:20:41 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 10:51:32 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	killer(pid_t client_pid)
 	}
 }
 
-t_dlist	*check_list_and_reset(pid_t pid, int *index, \
+void check_list_and_reset(pid_t pid, int *index, \
 			unsigned char *character, pid_t *client_pid)
 {
 	t_dlist	*temp;
@@ -72,16 +72,22 @@ t_dlist	*check_list_and_reset(pid_t pid, int *index, \
 			*client_pid = pid;
 			*index = 0;
 			*character = '\0';
-			return (g_store);
+			// return (g_store);
 		}
 		else
 		{
+			// ft_printf("temp->index: %d, temp->pid: %d\n", temp->index, temp->pid);
 			*character = temp->character;
 			*index = temp->index;
 			*client_pid = temp->pid;
 		}
 	}
-	return (temp);
+	else
+	{
+		temp->character = *character;
+		temp->index = *index;
+	}
+	// return (temp);
 }
 
 void	handler(int sig, siginfo_t *siginfo, void *context)
@@ -89,19 +95,25 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 	static int				index;
 	static unsigned char	character;
 	static pid_t			client_pid;
-	static t_dlist			*temp;
+	// static t_dlist			*temp;
 
 	(void)context;
 	if (siginfo->si_pid && siginfo->si_pid != client_pid)
-		temp = check_list_and_reset(siginfo->si_pid, \
+		check_list_and_reset(siginfo->si_pid, \
 				&index, &character, &client_pid);
+	// if (siginfo->si_pid && siginfo->si_pid != client_pid)
+	// 	temp = check_list_and_reset(siginfo->si_pid,
+	// 			&index, &character, &client_pid);
 	character = (character << 1) | (sig == SIGUSR1);
 	index++;
 	if (siginfo->si_pid && siginfo->si_pid == client_pid)
-	{
-		temp->character = character;
-		temp->index = index;
-	}
+		check_list_and_reset(siginfo->si_pid, \
+			&index, &character, &client_pid);
+	// if (siginfo->si_pid && siginfo->si_pid == client_pid)
+	// {
+	// 	temp->character = character;
+	// 	temp->index = index;
+	// }
 	feedback(client_pid, SIGUSR1);
 	if (index == 8)
 	{
