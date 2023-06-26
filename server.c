@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/25 14:15:09 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 07:27:33 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,22 @@
 
 t_dlist *char_store;
 
+void feedback(int client_pid, int sig)
+{
+	usleep(20);
+	if (kill(client_pid, sig) == -1)
+	{
+		ft_printf("Client Pid is invalid\n");
+		exit(0);
+	}
+}
+
 void killer(pid_t client_pid)
 {
 	t_dlist *node;
 	t_dlist *temp;
 
 	node = char_store;
-	usleep(50);
 	while (node)
 	{
 		if (node->pid == client_pid && char_store == node)
@@ -31,11 +40,7 @@ void killer(pid_t client_pid)
 			char_store = node->next;
 			free(node);
 			node = NULL;
-			if (kill(client_pid, SIGUSR2) == -1)
-			{
-				ft_printf("Client Pid is invalid\n");
-				exit(0);
-			}
+			feedback(client_pid, SIGUSR2);
 			return ;
 		}
 		if (node->next && node->next->pid == client_pid)
@@ -44,22 +49,20 @@ void killer(pid_t client_pid)
 			node->next = node->next->next;
 			free(temp);
 			temp = NULL;
-			if (kill(client_pid, SIGUSR2) == -1)
-			{
-				ft_printf("Client Pid is invalid\n");
-				exit(0);
-			}
+			feedback(client_pid, SIGUSR2);
 			return ;
 		}
 		node = node->next;
 	}
 }
 
-void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t *client_pid)
+t_dlist *check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t *client_pid)
 {
 	t_dlist *temp;
 
 	temp = char_store;
+	while (temp && temp->pid != pid)
+		temp = temp->next;
 	if (*client_pid != pid)
 	{
 		if (!ft_dlstfind(char_store, pid))
@@ -68,73 +71,49 @@ void check_list_and_reset(pid_t pid, int *index, unsigned char *character, pid_t
 			*client_pid = pid;
 			*index = 0;
 			*character = '\0';
-			return ;
+			return char_store;
 		}
 		else
 		{
-			while (temp)
-			{
-				if (temp->pid == pid)
-				{
-					*character = temp->character;
-					*index = temp->index;
-					*client_pid = temp->pid;
-					return ;
-				}
-				temp = temp->next;
-			}
+			*character = temp->character;
+			*index = temp->index;
+			*client_pid = temp->pid;
 		}
 	}
-	else
-	{
-		while (temp)
-		{
-			if (temp->pid == pid)
-			{
-				temp->character = *character;
-				temp->index = *index;
-				return ;
-			}
-			temp = temp->next;
-		}
-	}
+	return temp;
+	// else
+	// {
+	// 	temp->character = *character;
+	// 	temp->index = *index;
+	// }
 }
+
+
 
 void handler(int sig, siginfo_t *siginfo, void *context)
 {
-	static int i;
+	static int index;
 	static unsigned char character;
 	static pid_t client_pid;
+	static t_dlist *temp;
 
 	(void)context;
-	if (siginfo->si_pid)
-		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
+	if (siginfo->si_pid && siginfo->si_pid != client_pid)
+		temp = check_list_and_reset(siginfo->si_pid, &index, &character, &client_pid);
 	character = (character << 1) | (sig == SIGUSR1);
-	i++;
-	if (siginfo->si_pid)
-		check_list_and_reset(siginfo->si_pid, &i, &character, &client_pid);
-	int k = 0;
-	// ft_printf("\n");
-	while (1)
+	index++;
+	if (siginfo->si_pid && siginfo->si_pid == client_pid)
 	{
-		usleep(20);
-		int j = kill(client_pid, SIGUSR1);
-		if (j == -1)
-		{
-			k++;
-			if (k > 10)
-			{
-				ft_printf("Client Pid is invalid\n");
-				exit(0);
-			}
-		} 
-		else if (j == 0)
-			break ;
+		// ft_printf("hid before\n");
+		temp->character = character;
+		temp->index = index;
+		// ft_printf("hid after\n");
 	}
-	// usleep(50);
-	if (i == 8)
+		// check_list_and_reset(siginfo->si_pid, &index, &character, &client_pid);
+	feedback(client_pid, SIGUSR1);
+	if (index == 8)
 	{
-		i = 0;
+		index = 0;
 		if (character == '\0')
 			killer(client_pid);
 		write(1, &character, 1);
