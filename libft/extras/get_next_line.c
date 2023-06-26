@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 07:27:42 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/05/24 06:28:14 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 08:46:30 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,14 +110,13 @@ int	get_next_line(int fd, char **line)
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (0);
 	str = ft_reader(fd, str, BUFFER_SIZE);
-	
 	if (!str)
 		return (0);
 	s = ft_cline(str);
 	if (!str)
 	{
 		*line = s;
-		return(ft_strlen(s));
+		return (ft_strlen(s));
 	}
 	str = ft_nline(str);
 	if (str && *str == '\0')

@@ -6,7 +6,7 @@
 #    By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/12 14:40:14 by mkaruvan          #+#    #+#              #
-#    Updated: 2023/06/23 10:24:50 by mkaruvan         ###   ########.fr        #
+#    Updated: 2023/06/26 08:34:44 by mkaruvan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,15 +40,16 @@ OBJ = $(SRC:.c=.o)
 
 all: $(LIBFT) $(CLIENT_NAME) $(SERVER_NAME)
 
-$(CLIENT_NAME): $(OBJ)
+$(CLIENT_NAME): $(CLIENT) $(LIBFT_DIR)/$(LIBFT)
 	@echo "$(GREEN)compiling client...$(EOC)"
 	$(CC) $(CFLAGS) $(CLIENT) -o $@ $(LIBFT_DIR)/$(LIBFT)
 	@echo "$(GREEN)client build completed...$(EOC)"
-$(SERVER_NAME): $(OBJ)
+$(SERVER_NAME): $(SERVER) $(LIBFT_DIR)/$(LIBFT)
 	@echo "$(GREEN)compiling server...$(EOC)"
 	$(CC) $(CFLAGS) $(SERVER) -o $@ $(LIBFT_DIR)/$(LIBFT)
 	@echo "$(GREEN)server build completed...$(EOC)"
-$(LIBFT) : 
+
+$(LIBFT) :
 	@make -C $(LIBFT_DIR)
 
 clean:

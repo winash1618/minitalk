@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 12:11:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/23 09:11:40 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/26 08:44:24 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 # include <unistd.h>
 # include <stdint.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
+
 typedef struct s_list
 {
 	void			*content;
@@ -97,7 +98,6 @@ void	ft_dlstadd_front(t_dlist **olst, t_dlist *nlst);
 int		ft_dlstsize(t_dlist *lst);
 t_dlist	*ft_dlstlast(t_dlist *lst);
 void	ft_dlstadd_back(t_dlist **olst, t_dlist *nlst);
-void	ft_dlstdelone(t_dlist **head, pid_t pid);
 void	ft_dlstclear(t_dlist **lst);
 int		ft_dlstfind(t_dlist *head, pid_t pid);
 

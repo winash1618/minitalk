@@ -6,7 +6,7 @@
 #    By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/22 14:38:28 by mkaruvan          #+#    #+#              #
-#    Updated: 2023/06/23 08:05:39 by mkaruvan         ###   ########.fr        #
+#    Updated: 2023/06/26 08:44:16 by mkaruvan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,8 +70,7 @@ SRC_DLST    := dlst/ft_dlstnew.c \
                dlst/ft_dlstsize.c \
                dlst/ft_dlstlast.c \
                dlst/ft_dlstclear.c \
-               dlst/ft_dlstfind.c \
-               dlst/ft_dlstdelone.c
+               dlst/ft_dlstfind.c 
 
 SRC_EXTRAS  := extras/get_next_line.c \
                extras/ft_atoi_base.c \
