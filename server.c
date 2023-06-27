@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 16:48:45 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/27 07:01:05 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,23 @@ t_dlist	*g_store;
 
 void	feedback(int client_pid, int sig)
 {
-	usleep(20);
-	if (kill(client_pid, sig) == -1)
+	// usleep(20);
+	// if (kill(client_pid, sig) == -1)
+	// {
+	// 	ft_printf("Client Pid is invalid\n");
+	// 	exit(0);
+	// }
+	while (1)
 	{
-		ft_printf("Client Pid is invalid\n");
-		exit(0);
+		usleep(2);
+		int j = kill(client_pid, sig);
+		if (j == 0)
+			break ;
+		else if (j == -1)
+		{
+			ft_printf("Client PID is invalid\n");
+			exit(0);
+		}	
 	}
 }
 
@@ -60,17 +72,10 @@ pid_t check_list_and_reset(pid_t pid, int *index, \
 			unsigned char *character, pid_t *client_pid)
 {
 	t_dlist	*temp;
-	// int i;
 
 	temp = g_store;
-	// i = 0;
 	while (temp && temp->pid != pid)
-	// {
-	// 	i++;
-	// 	if (i > 100)
-	// 		ft_printf("Error : \n");
 		temp = temp->next;
-	// }
 	if (*client_pid != pid)
 	{
 		if (!ft_dlstfind(g_store, pid))

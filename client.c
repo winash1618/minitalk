@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 16:45:56 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/27 07:08:44 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,20 +82,34 @@ void	send_data(unsigned char character, int pid)
 
 	index = 7;
 	time = 0;
-	usleep(2);
+	// usleep(2);
 	while (index >= 0)
 	{
-		if (kill(pid, SIGUSR2 - (character >> index-- & 1)) == -1)
-			ft_err();
+		// if (kill(pid, SIGUSR2 - (character >> index & 1)) == -1)
+		// 	ft_err();
+		while (1)
+		{
+			usleep(2);
+			int j = kill(pid, SIGUSR2 - (character >> index & 1));
+			if (j == 0)
+				break ;
+			else if (j == -1)
+			{
+				ft_printf("Client PID is invalid\n");
+				exit(0);
+			}	
+		}
+		index--;
 		g_flag = true;
 		while (g_flag)
 		{
-			usleep(20);
+			usleep(2);
 			time++;
-			if (time > 100)
+			if (time > 10000)
 			{
-				g_flag = false;
+				time = 0;
 				ft_printf("hi");
+				g_flag = false;
 			}
 		}
 	}
