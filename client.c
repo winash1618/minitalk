@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/27 07:08:44 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/27 09:39:08 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,37 +18,26 @@
 
 bool	g_flag = false;
 
-int	ft_matoi(const char *str)
-{
-	int				sign;
-	unsigned long	sum;
-
-	sign = 1;
-	sum = 0;
-	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
-		str++;
-	if (*str == '-' || *str == '+')
-	{
-		if (*str == '-')
-			return (-1);
-		str++;
-	}
-	while (*str >= '0' && *str <= '9')
-	{
-		sum = sum * 10 + (*str - '0');
-		str++;
-		if ((sum > 2147483648 && sign == -1) || (sum > 2147483647 && sign == 1))
-			return (-1);
-	}
-	if (*str)
-		return (-1);
-	return (sum * sign);
-}
-
 void	ft_err(void)
 {
-	ft_printf("Invalid Process ID!!!");
+	ft_printf("Invalid Server PID!!!");
 	exit (1);
+}
+
+void	sender(int server_pid, int sig)
+{
+	int	j;
+
+	j = 0;
+	while (1)
+	{
+		usleep(2);
+		j = kill(server_pid, sig);
+		if (j == 0)
+			break ;
+		else if (j == -1)
+			ft_err();
+	}
 }
 
 void	handler(int sig, siginfo_t *siginfo, void *context)
@@ -78,37 +67,22 @@ void	handler(int sig, siginfo_t *siginfo, void *context)
 void	send_data(unsigned char character, int pid)
 {
 	int	index;
-	int time;
+	int	count;
 
 	index = 7;
-	time = 0;
-	// usleep(2);
+	count = 0;
 	while (index >= 0)
 	{
-		// if (kill(pid, SIGUSR2 - (character >> index & 1)) == -1)
-		// 	ft_err();
-		while (1)
-		{
-			usleep(2);
-			int j = kill(pid, SIGUSR2 - (character >> index & 1));
-			if (j == 0)
-				break ;
-			else if (j == -1)
-			{
-				ft_printf("Client PID is invalid\n");
-				exit(0);
-			}	
-		}
-		index--;
+		sender(pid, SIGUSR2 - (character >> index-- & 1));
 		g_flag = true;
 		while (g_flag)
 		{
 			usleep(2);
-			time++;
-			if (time > 10000)
+			count++;
+			if (count > 10000)
 			{
-				time = 0;
-				ft_printf("hi");
+				count = 0;
+				ft_printf("*");
 				g_flag = false;
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/27 12:11:30 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/26 08:44:24 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/27 08:54:22 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ int		ft_dlstfind(t_dlist *head, pid_t pid);
 int		get_next_line(int fd, char **line);
 int		ft_atoi_base(const char *s, int c);
 int		ft_isspace(int c);
+int		ft_matoi(const char *str);
 
 #endif

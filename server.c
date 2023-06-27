@@ -6,7 +6,7 @@
 /*   By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/10 10:13:15 by mkaruvan          #+#    #+#             */
-/*   Updated: 2023/06/27 07:01:05 by mkaruvan         ###   ########.fr       */
+/*   Updated: 2023/06/27 09:40:37 by mkaruvan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,20 @@ t_dlist	*g_store;
 
 void	feedback(int client_pid, int sig)
 {
-	// usleep(20);
-	// if (kill(client_pid, sig) == -1)
-	// {
-	// 	ft_printf("Client Pid is invalid\n");
-	// 	exit(0);
-	// }
+	int	j;
+
+	j = 0;
 	while (1)
 	{
 		usleep(2);
-		int j = kill(client_pid, sig);
+		j = kill(client_pid, sig);
 		if (j == 0)
 			break ;
 		else if (j == -1)
 		{
 			ft_printf("Client PID is invalid\n");
 			exit(0);
-		}	
+		}
 	}
 }
 
@@ -68,7 +65,7 @@ void	killer(pid_t client_pid)
 	}
 }
 
-pid_t check_list_and_reset(pid_t pid, int *index, \
+pid_t	check_list_and_reset(pid_t pid, int *index, \
 			unsigned char *character, pid_t *client_pid)
 {
 	t_dlist	*temp;

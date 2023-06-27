@@ -6,7 +6,7 @@
 #    By: mkaruvan <mkaruvan@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/22 14:38:28 by mkaruvan          #+#    #+#              #
-#    Updated: 2023/06/26 08:44:16 by mkaruvan         ###   ########.fr        #
+#    Updated: 2023/06/27 08:53:51 by mkaruvan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,8 @@ SRC_DLST    := dlst/ft_dlstnew.c \
 
 SRC_EXTRAS  := extras/get_next_line.c \
                extras/ft_atoi_base.c \
-               extras/ft_isspace.c
+               extras/ft_isspace.c \
+               extras/ft_matoi.c
 
 SRC_PRINTF  := ft_printf/ft_printf.c \
                ft_printf/ft_putaddr.c \
